@@ -9,7 +9,6 @@ import re
 import threading
 
 
-
 def print_key_structure(dictionary, indent=0):
     """
     Print the key structure of a dictionary
@@ -72,20 +71,44 @@ def split_words(text):
     pattern = r"\b\w+(?:'\w+)?\b|\w+"
     return re.findall(pattern, text)
 
-def parallel_processing(job, arg_list, num_threads=8):
+def parallel_processing(job, 
+                        arg_list, 
+                        num_threads=8, 
+                        thread_limit=None, 
+                        limit_callback=None, 
+                        merge_result=True):
     threads = []
     result = []
 
     """
-    Function to thread a replicated job
+    Function to parallelize the execution of a given job function on a list of arguments.
 
     Parameters:
-        job: a function that takes each argument in arg_list to be parameter(s)
-        arg_list (list)
-        num_threads (number)
+        job (function): The function to be executed in parallel. It should accept a single argument from the arg_list.
+        arg_list (list): A list of arguments to be processed by the job function.
+        num_threads (int): The number of threads to be used for parallel execution (default is 8).
+        thread_limit (int): Optional. The maximum number of arguments processed by a single thread before executing a callback function. If None, no thread limiting is applied (default is None).
+        merge_result (bool): Whether to merge the results of all threads into a single list (default is True).
 
     Returns:
-        (list) collected results of the threads 
+        list: A list containing the results of the job function applied to each argument in arg_list.
+
+    Note:
+        - If thread_limit is specified, a callback function can be executed after processing each batch of arguments by a thread.
+        - The order of results in the returned list may not match the order of arguments in arg_list due to parallel execution.
+
+    Example:
+        # Define a sample job function
+        def square(x):
+            return x ** 2
+
+        # List of arguments
+        args = [1, 2, 3, 4, 5]
+
+        # Execute the job function in parallel
+        result = parallel_processing(square, args, num_threads=4)
+
+        # Output: [1, 4, 9, 16, 25]
     """
 
     # Define a function to distribute arguments to threads
