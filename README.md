@@ -1,0 +1,1 @@
+Some usually reusable functions. Hmm... I will refactor later.
