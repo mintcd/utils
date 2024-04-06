@@ -9,7 +9,7 @@ import re
 import threading
 
 class DataStructureProcessing:
-    def unique(lst : list()):
+    def unique(lst : list):
         unique_elements = []
         seen = set()
         for element in lst:
