@@ -22,7 +22,7 @@ class DataStructureProcessing:
 
     def key_structure(dictionary: dict, indent=0, display=True):
         """
-        Traverses through a dictionary iteratively and returns its structure.
+        Recursively traverses through a dictionary and returns its structure.
 
         Args:
             dictionary (dict): The dictionary to analyze.
@@ -63,24 +63,26 @@ class DataStructureProcessing:
 
         """
         key_structure_dict = {}
-        stack = [(dictionary, key_structure_dict)]
-
-        while stack:
-            current_dict, current_key_structure = stack.pop()
-            for key, value in current_dict.items():
+        
+        if isinstance(dictionary, dict):
+            for key, value in dictionary.items():
+                key_structure_dict[key] = {}
                 if isinstance(value, dict):
-                    current_key_structure[key] = {}
-                    stack.append((value, current_key_structure[key]))
+                    key_structure_dict[key] = DataStructureProcessing.key_structure(value, indent + 1, False)
                 elif isinstance(value, list) and value:
-                    current_key_structure[key] = [{}]
-                    stack.append((value[0], current_key_structure[key][0]))
+                    key_structure_dict[key] = [DataStructureProcessing.key_structure(value[0], indent + 1, False)]
                 else:
-                    current_key_structure[key] = type(value).__name__
+                    key_structure_dict[key] = type(value).__name__
+        elif isinstance(dictionary, list) and dictionary:
+            element = dictionary[0]
+            if isinstance(element, dict) or (isinstance(element, list) and element):
+                key_structure_dict = [DataStructureProcessing.key_structure(element, indent + 1, False)]
 
-        if display:
+        if display: 
             print(json.dumps(key_structure_dict, indent=4))
-
+        
         return key_structure_dict
+
 
     def splitted_words(text):
         pattern = r"\b\w+(?:'\w+)?\b|\w+"
