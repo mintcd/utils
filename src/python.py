@@ -123,7 +123,7 @@ class FileProcessing:
         return None
 
 class WorkloadProcessing:
-    def parallel_processing(job, arg_list, num_threads=8):
+    def parallel_processing(job, arg_list, num_threads=8, merge=False):
         threads = []
         result = []
 
@@ -134,6 +134,7 @@ class WorkloadProcessing:
             job (func): a function that takes each argument in arg_list to be parameter(s).
             arg_list (list).
             num_threads (number): Defaults to 8.
+            merge (bool): whether return the merged results of the threads. Default to None.
 
         Returns:
             (list) collected results of the threads 
@@ -142,7 +143,7 @@ class WorkloadProcessing:
         # Define a function to distribute arguments to threads
         def distribute_args(thread_index, args):
             for i in range(thread_index, len(args), num_threads):
-                result.append(job(args[i]))
+                if merge: result.append(job(args[i]))
 
         # Create and start threads
         for i in range(num_threads):
