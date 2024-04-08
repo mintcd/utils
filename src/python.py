@@ -131,7 +131,7 @@ class WorkloadProcessing:
         Function to thread over a replicated job
 
         Parameters:
-            job: a function that takes each argument in arg_list to be parameter(s).
+            job (func): a function that takes each argument in arg_list to be parameter(s).
             arg_list (list).
             num_threads (number): Defaults to 8.
 
